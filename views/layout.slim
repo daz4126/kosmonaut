@@ -1,0 +1,26 @@
+doctype html
+html
+  head
+    title= @title || "Kosmonaut"
+    link rel="shortcut icon" href="/favicon.ico"
+    /[if lt IE 9]
+      script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"
+    -if admin?
+      link rel="stylesheet" href="/admin/styles.css"
+  body
+    header
+      h1 Kosmonaut
+      - if admin?
+        nav
+          ul
+            li
+              a href='/pages' Pages
+            li
+              a href='/pages/new' Add a page
+            - if @page
+              li
+                a href="/pages/#{@page.id}/edit" Edit this page
+              li
+                a href="/pages/delete/#{@page.id}" Delete this page
+        == styled_flash
+    == yield
