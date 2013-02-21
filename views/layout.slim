@@ -8,19 +8,7 @@ html
     -if admin?
       link rel="stylesheet" href="/admin/styles.css"
   body
+    - if admin?
+      == slim :kosmonaut
     header
-      h1 Kosmonaut
-      - if admin?
-        nav
-          ul
-            li
-              a href='/pages' Pages
-            li
-              a href='/pages/new' Add a page
-            - if @page
-              li
-                a href="/pages/#{@page.id}/edit" Edit this page
-              li
-                a href="/pages/delete/#{@page.id}" Delete this page
-        == styled_flash
     == yield

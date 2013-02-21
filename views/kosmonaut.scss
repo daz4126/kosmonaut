@@ -1,9 +1,22 @@
-label{
-  display: block;
+#kosmonaut-admin{
+  background: #ccc;
+  color: #444;
+  padding: 4px;
+  
+  #flash{
+    width: 300px;
+    padding: 8px;
+    background: white;
+    border: orange 4px solid;
+  }
+
 }
 
-#flash{
-  width: 300px;
-  padding: 8px;
-  border: black 4px solid;
+#kosmonaut-form{
+  label{
+    display: block;
+  }
 }
+
+
+

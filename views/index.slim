@@ -3,6 +3,6 @@ h1 Pages
   ul#pages
   - @pages.each do |page|
     li
-      a href="/pages/#{page.id}" =page.title
+      a href="/#{page.slug}" =page.title
 - else
   p No pages here!

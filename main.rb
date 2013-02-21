@@ -12,9 +12,16 @@ end
 
 class Page
   include Mongoid::Document
+  include Mongoid::Versioning
+  include Mongoid::Timestamps
   
   field :title,   type: String
   field :content, type: String
+  field :slug, type: String, default: -> { slugify title }
+  
+  def slugify title
+   title.downcase.gsub(/\W/,'-').squeeze('-').chomp('-') if title
+  end
 end
 
 helpers do
@@ -26,7 +33,18 @@ end
 get("/admin/styles.css"){ scss :kosmonaut }
 
 get '/' do
-  "Hello World"
+  slim :home
+end
+
+get '/:slug' do
+  begin
+    @page = Page.find_by(slug: params[:slug])
+  rescue
+    pass
+  end
+  last_modified @page.updated_at
+  cache_control :public, :must_revalidate 
+  slim :show
 end
 
 get '/pages' do
