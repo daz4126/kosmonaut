@@ -11,3 +11,5 @@
         li
           a href="/pages/delete/#{@page.id}" Delete this page
   == styled_flash
+  - if @page
+    p.version This is version #{@page.version} of this page.
