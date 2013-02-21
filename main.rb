@@ -22,6 +22,10 @@ class Page
   def slugify title
    title.downcase.gsub(/\W/,'-').squeeze('-').chomp('-') if title
   end
+  
+  def to_s
+    "/" + self.slug
+  end
 end
 
 helpers do
@@ -60,7 +64,7 @@ end
 post '/pages' do
    if page = Page.create(params[:page])
      flash[:notice] = "#{page.title}  created successfully"
-     redirect to("/pages/#{page.id}")
+     redirect to("#{page}")
    else
      flash[:notice] = "Unable to create page"
      slim :new 
@@ -81,7 +85,7 @@ put '/pages/:id' do
   page = Page.find(params[:id])
   if page.update_attributes(params[:page])
     flash[:notice] = "#{page.title} updated successfully" 
-    redirect to("/pages/#{page.id}")
+    redirect to("#{page}")
   else
    flash[:notice] = "Unable to update page"
    slim :edit
@@ -96,9 +100,8 @@ end
 delete '/pages/:id' do
   if Page.find(params[:id]).destroy
     flash[:notice] = "Page deleted"
-    redirect to('/pages')
   else
     flash[:notice] = "Unable to update page"
-    redirect to('/pages')
   end
+  redirect to('/pages')
 end
