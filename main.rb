@@ -15,18 +15,41 @@ class Page
   include Mongoid::Versioning
   include Mongoid::Timestamps
   
+  has_many :pages, class_name: 'Page', inverse_of: :parent
+  belongs_to :parent, class_name: 'Page'
+  
   field :title,   type: String
   field :content, type: String
-  field :slug, type: String, default: -> { slugify title }
+  field :permalink, type: String, default: -> { make_permalink }
   
-  def slugify title
+  def make_permalink
+    slug
+  end
+  
+  def slug
    title.downcase.gsub(/\W/,'-').squeeze('-').chomp('-') if title
+  end
+  
+  def self.roots
+    where(parent_id: nil)
+  end
+  
+  def root?
+    !self.parent
   end
 end
 
 helpers do
   def admin?
     true if session[:admin]
+  end
+  
+  def url_for page
+    if admin?
+      "/pages/" + page.id
+    else
+      "/" + page.slug   
+    end  
   end
 end
 
@@ -39,9 +62,9 @@ get '/' do
   slim :home
 end
 
-get '/:slug' do
+get '/:permalink' do
   begin
-    @page = Page.find_by(slug: params[:slug])
+    @page = Page.find_by(permalink: params[:permalink])
   rescue
     pass
   end
@@ -51,7 +74,7 @@ get '/:slug' do
 end
 
 get '/pages' do
-  @pages = Page.all
+  @pages = Page.roots
   slim :index
 end
 
@@ -60,10 +83,16 @@ get '/pages/new' do
   slim :new
 end
 
+get '/pages/:id/new' do
+  parent = Page.find(params[:id])
+  @page = parent.pages.new
+  slim :new
+end
+
 post '/pages' do
    if page = Page.create(params[:page])
      flash[:notice] = "#{page.title}  created successfully"
-     redirect to("/pages/#{page.id}")
+     redirect to url_for page
    else
      flash[:notice] = "Unable to create page"
      slim :new 
@@ -84,7 +113,7 @@ put '/pages/:id' do
   page = Page.find(params[:id])
   if page.update_attributes(params[:page])
     flash[:notice] = "#{page.title} updated successfully" 
-    redirect to("/pages/#{page.id}")
+    redirect to url_for page
   else
    flash[:notice] = "Unable to update page"
    slim :edit
