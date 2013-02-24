@@ -1,8 +1,8 @@
-h1 Pages
--if @pages.any?
-  ul#pages
-  - @pages.each do |page|
-    li
-      a href="/#{page.slug}" =page.title
-- else
-  p No pages here!
+#kosmonaut-pages
+  h1 Pages
+  -if @pages.any?
+    ul.pages
+    - @pages.each do |page|
+      == slim :page, :locals => {page: page}
+  - else
+    p No pages here!

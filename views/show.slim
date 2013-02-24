@@ -1,2 +1,3 @@
 h1= @page.title
-== markdown @page.content
+- if @page.content
+  == markdown @page.content

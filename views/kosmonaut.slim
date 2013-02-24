@@ -7,10 +7,15 @@
         a href='/pages/new' Add a page
       - if @page
         li
+          a href="/pages/#{@page.id}/new" Add child page
+        li
           a href="/pages/#{@page.id}/edit" Edit this page
         li
           a href="/pages/delete/#{@page.id}" Delete this page
   == styled_flash
-  - if @page
-    p.version This is version #{@page.version} of this page.
+  - if @page && @page.created_at
+    .info
+      p This is version #{@page.version} of this page.
+      ==@page.created_at.strftime("<p>Created at %I:%M%p on %d %B %Y</p>")
+      ==@page.updated_at.strftime("<p>Updated at %I:%M%p on %d %B %Y</p>")
   a href="/logout" Log Out

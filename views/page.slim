@@ -1,0 +1,6 @@
+li
+  a href="#{url_for page}" =page.title
+  - if page.pages.any?
+    - page.pages.each do |page|
+      ul.pages
+        == slim :page, :locals => {page: page}

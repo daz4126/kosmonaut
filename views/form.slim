@@ -1,4 +1,10 @@
 label for="title" Title:
 input.title type="text" name="page[title]" value="#{@page.title}" size="32"
+label for="parent_id"Parent Page:
+select name="page[parent_id]"
+  option value="" Root Page
+  - (Page.all - [@page]).each do |parent|
+    option value=parent.id selected=("selected" if @page.parent_id == parent.id)
+      == parent.title
 label for="content" Content:
 textarea.content name="page[content]" rows="12" cols="72" ==@page.content
