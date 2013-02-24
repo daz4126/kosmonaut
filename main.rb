@@ -26,9 +26,12 @@ end
 
 helpers do
   def admin?
-    true
+    true if session[:admin]
   end
 end
+
+get("/login"){session[:admin]=true; redirect back}
+get("/logout"){session[:admin]=nil; redirect back}
 
 get("/admin/styles.css"){ scss :kosmonaut }
 

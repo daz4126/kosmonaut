@@ -10,5 +10,7 @@ html
   body
     - if admin?
       == slim :kosmonaut
+    - else
+      a href="/login" Log In
     header
     == yield
